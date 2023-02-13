@@ -1,15 +1,16 @@
 package com.egorreceipe.receiptapp.Service;
 
-import com.egorreceipe.receiptapp.Model.Ingridient;
 import com.egorreceipe.receiptapp.Model.Recipe;
 
-import java.util.List;
+import java.util.Map;
 
 public interface ReceiptService {
+    Integer addRecipe(Recipe recipe);
+    Recipe getRecipe(Integer id);
+    void checkingForIllegalArguments(Recipe recipe);
 
-    public void addRecipe(String name, int countOfIngridients, List<Ingridient> ingridients, List<String> stepsToCookProperly);
+    boolean editRecipe(int id, Recipe recipe);
 
-    Recipe getRecipe(Integer id2);
-
-    void checkingForIlligalArduments(String name, int posCountCookingInMin);
+    boolean deleteRecipe(int id);
+    Map<Integer, Recipe> getAllRecipes();
 }

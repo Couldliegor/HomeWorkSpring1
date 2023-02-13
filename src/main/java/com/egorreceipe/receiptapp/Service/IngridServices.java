@@ -1,11 +1,19 @@
 package com.egorreceipe.receiptapp.Service;
 
 import com.egorreceipe.receiptapp.Model.Ingridient;
-import com.egorreceipe.receiptapp.Service.impl.IngridServicesImpl;
+
+import java.util.Map;
 
 public interface IngridServices {
-    void addIngridient(String name, int countOfIngridients, String typeOfUnit);
+    Integer addIngridient(Ingridient ingridient);
+
     Ingridient getIngrid(Integer id2);
 
-    void checkingForIlligalArduments(String name, int countOfIngridients, String typeOfUnit);
+    void checkingForIlligalArduments(Ingridient ingridient);
+
+    boolean editIngridient(int id, Ingridient ingridient);
+
+    void deleteIngridient(int id);
+
+    Map<Integer, Ingridient> getAllIngridients();
 }

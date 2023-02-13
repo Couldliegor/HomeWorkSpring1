@@ -1,24 +1,13 @@
 package com.egorreceipe.receiptapp.Model;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.experimental.StandardException;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-
+@AllArgsConstructor
 @Data
 public class Ingridient {
-    private String name;
-    private int countOfIngridients;
-    private String typeOfUnit;
-    private static int id2 = 1;
-    public static Map<Integer, Ingridient> ingridInMap = new LinkedHashMap<>();
-
-    public Ingridient(String name, int countOfIngridients, String typeOfUnit) {
-        this.name = name;
-        this.countOfIngridients = countOfIngridients;
-        this.typeOfUnit = typeOfUnit;
-        ingridInMap.put(id2, this);
-        id2++;
-    }
+    private final String name;
+    private final int countOfIngridients;
+    private final String typeOfUnit;
 }
+

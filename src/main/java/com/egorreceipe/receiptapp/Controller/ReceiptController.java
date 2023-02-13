@@ -1,29 +1,56 @@
 package com.egorreceipe.receiptapp.Controller;
-import com.egorreceipe.receiptapp.Model.Ingridient;
+import com.egorreceipe.receiptapp.Model.Recipe;
 import com.egorreceipe.receiptapp.Service.ReceiptService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.util.Map;
 
 @RestController
-@RequestMapping("/recipe") // обработка методов будет начинаться с budget.
+@RequestMapping("/recipe")
 public class ReceiptController {
-    private ReceiptService receiptService;
+    private final ReceiptService receiptService;
 
     public ReceiptController(ReceiptService receiptService) {
         this.receiptService = receiptService;
     }
 
-    @GetMapping("/add")
-    public String addReceipe(@RequestParam String name, @RequestParam int posCountCookingInMin, @RequestParam List<String> stepsToCookProperly, @RequestParam List<Ingridient> ingridients) {
-        receiptService.addRecipe(name, posCountCookingInMin, ingridients, stepsToCookProperly);
-        return "Рецепт успешно добавлен";
+    @PostMapping("/add")
+    public ResponseEntity<Recipe> addReceipe(@RequestBody Recipe recipe) {
+        int id = receiptService.addRecipe(recipe);
+        return ResponseEntity.ok().body(receiptService.getRecipe(id));
     }
     @GetMapping("/get")
-    public String getReceipe(@RequestParam Integer id2) {
-        return receiptService.getRecipe(id2).toString();
+    public String getReceipe(@RequestParam Integer id) {
+        return receiptService.getRecipe(id).toString();
+    }
+
+    @PutMapping("/edit/{id}")
+    public ResponseEntity<Recipe> editRecipe(@PathVariable int id,@RequestBody Recipe recipe) {
+        if (receiptService.editRecipe(id, recipe)) {
+            return ResponseEntity.ok().body(receiptService.getRecipe(id));
+        } else if (!receiptService.editRecipe(id, recipe)) {
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.noContent().build();
+        }
+    }
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Recipe> deleteRecipe(@PathVariable int id){
+        if (receiptService.deleteRecipe(id)) {
+            return ResponseEntity.ok().body(receiptService.getRecipe(id));
+        }
+        return ResponseEntity.notFound().build();
+    }
+
+    @GetMapping("/get/all")
+    public ResponseEntity<Map<Integer, Recipe>> getAllRecipes() {
+        if (receiptService.getAllRecipes() == null) {
+            return ResponseEntity.badRequest().build();
+        }
+        return ResponseEntity.ok(receiptService.getAllRecipes());
     }
 }
+
+//add?name=lasagna&posCountCookingInMin=20
+//add?name=lasagnas&posCountCookingInMin=35
