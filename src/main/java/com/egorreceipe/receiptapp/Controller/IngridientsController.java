@@ -3,6 +3,13 @@ package com.egorreceipe.receiptapp.Controller;
 
 import com.egorreceipe.receiptapp.Model.Ingridient;
 import com.egorreceipe.receiptapp.Service.IngridServices;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -10,6 +17,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/ingrid")
+@Tag(name = "Ингридиенты", description = "CRUD Операции с ингридиентами")
 public class IngridientsController {
     private final IngridServices ingridServices;
 
@@ -17,12 +25,74 @@ public class IngridientsController {
         this.ingridServices = ingridServices;
     }
 
+    @Operation(
+            summary = "Добавление ингридиента по заданным параметрам",
+            description = "Параметры: name, countOfIngridient, typeOfUnit "
+    )
+    @Parameter(
+            name = "name", example  = "Яблоки"
+    )
+    @Parameter(
+            name = "countOfIngridient", example  = "3"
+    )
+    @Parameter(
+            name = "typeOfUnit", example  = "кг"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Ингридиенты успешно добавлены!",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json"
+                            )
+                    }
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "Ингридиент не был добавлен, проверьте ввод значений",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json"
+                            )
+                    }
+            )
+    }
+    )
     @PostMapping("/add")
     public ResponseEntity<Ingridient> addIngrid(@RequestBody Ingridient ingridient) {
         Integer id = ingridServices.addIngridient(ingridient);
         return ResponseEntity.ok().body(ingridServices.getIngrid(id));
     }
 
+    @Operation(
+            summary = "Получение ингридиента по айди",
+            description = "Параметры: id"
+    )
+    @Parameter(
+            name = "id", example  = "0"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Ингридиент успешно получен!",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json"
+                            )
+                    }
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Ингридиент не был найден.",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json"
+                            )
+                    }
+            )
+    }
+    )
     @GetMapping("/get")
     public ResponseEntity<Ingridient> getIngrid(@RequestParam int id) {
         if (ingridServices.getIngrid(id) == null) {
@@ -30,7 +100,36 @@ public class IngridientsController {
         }
         return ResponseEntity.ok(ingridServices.getIngrid(id));
     }
-
+    @Operation(
+            summary = "Редактирование ингридиента ингридиента по айди, json",
+            description = "Параметры: id, json"
+    )
+    @Parameters(value = {
+            @Parameter(
+                    name = "id", example  = "0"
+            )
+    })
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Ингридиент успешно изменен!",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json"
+                            )
+                    }
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Ингридиент не был найден.",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json"
+                            )
+                    }
+            )
+    }
+    )
     @PutMapping("/edit/{id}")
     public ResponseEntity<Ingridient> editIngridient(@PathVariable int id, @RequestBody Ingridient ingridient) {
         if (ingridServices.editIngridient(id, ingridient)) {
@@ -39,15 +138,69 @@ public class IngridientsController {
         return ResponseEntity.notFound().build();
     }
 
+    @Operation(
+            summary = "Удаление ингридиента по айди",
+            description = "Параметры: id"
+    )
+    @Parameters(value = {
+            @Parameter(
+                    name = "id", example  = "0"
+            )
+    })
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Ингридиент удален!",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json"
+                            )
+                    }
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Ингридиент не был найден.",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json"
+                            )
+                    }
+            )
+    }
+    )
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Ingridient> deleteIngridient(@PathVariable int id) {
         if (ingridServices.getIngrid(id) == null) {
             return ResponseEntity.notFound().build();
         }
-            ingridServices.deleteIngridient(id);
-            return ResponseEntity.ok().build();
+        ingridServices.deleteIngridient(id);
+        return ResponseEntity.ok().build();
     }
 
+    @Operation(
+            summary = "Получение всех ингридиентов"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Ингридиенты успешно получены!",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json"
+                            )
+                    }
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Ингридиентов не было добавлено.",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json"
+                            )
+                    }
+            )
+    }
+    )
     @GetMapping("/get/all")
     public ResponseEntity<Map<Integer, Ingridient>> getAllIngridients() {
         if (ingridServices.getAllIngridients() == null) {

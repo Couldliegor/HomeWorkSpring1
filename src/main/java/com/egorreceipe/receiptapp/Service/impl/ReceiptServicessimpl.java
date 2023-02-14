@@ -3,6 +3,7 @@ package com.egorreceipe.receiptapp.Service.impl;
 import com.egorreceipe.receiptapp.Model.Ingridient;
 import com.egorreceipe.receiptapp.Model.Recipe;
 import com.egorreceipe.receiptapp.Service.ReceiptService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -26,10 +27,10 @@ public class ReceiptServicessimpl implements ReceiptService {
     }
     @Override
     public void checkingForIllegalArguments(Recipe recipe) {
-        if (recipe.getPosCountCookingInMin()< 0) {
+        if (recipe.getPosCountCookingInMin() < 0) {
             throw new IllegalArgumentException("Неправильно введено количество ингридиентов");
         }
-        if (recipe.getName().isEmpty() || recipe.getName().isBlank()) {
+        if (StringUtils.isEmpty(recipe.getName()) || StringUtils.isBlank(recipe.getName())) {
             throw new IllegalArgumentException("Имя ингридиента не может быть пустым");
         }
     }

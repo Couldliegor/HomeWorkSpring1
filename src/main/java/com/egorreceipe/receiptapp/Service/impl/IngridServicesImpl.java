@@ -2,6 +2,7 @@ package com.egorreceipe.receiptapp.Service.impl;
 
 import com.egorreceipe.receiptapp.Model.Ingridient;
 import com.egorreceipe.receiptapp.Service.IngridServices;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.LinkedHashMap;
@@ -26,15 +27,15 @@ public class IngridServicesImpl implements IngridServices {
             return ingridInMap.get(id);
         }
     }
-    @Override
+    @Override //String utils
     public void checkingForIlligalArduments(Ingridient ingridient) {
         if (ingridient.getCountOfIngridients() < 0) {
             throw new IllegalArgumentException("Неправильно введено количество ингридиентов");
         }
-        if (ingridient.getName().isEmpty() || ingridient.getName().isBlank()) {
+        if (StringUtils.isBlank(ingridient.getName()) || StringUtils.isEmpty(ingridient.getName())) {
             throw new IllegalArgumentException("Имя ингридиента не может быть пустым");
         }
-        if (ingridient.getTypeOfUnit().isBlank() || ingridient.getTypeOfUnit().isEmpty()) {
+        if (StringUtils.isBlank(ingridient.getTypeOfUnit()) || StringUtils.isEmpty(ingridient.getTypeOfUnit())) {
             throw new IllegalArgumentException("Единица измерения не может быть пустой");
         }
     }
