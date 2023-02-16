@@ -25,11 +25,8 @@ public class ReceiptController {
             summary = "Добавление/создание рецепта",
             description = "рецепт создается по параметрам"
     )
-    @Parameter(
-            name = "name", example  = "Лазанья"
-    )
-    @Parameter(
-            name = "posCountCookingInMin", example  = "15"
+    @io.swagger.v3.oas.annotations.parameters.RequestBody(
+            description = "name:Лазанья, posCountCookingInMin: 15"
     )
     @ApiResponses(value = {
             @ApiResponse(
@@ -42,8 +39,8 @@ public class ReceiptController {
                     }
             ),
             @ApiResponse(
-                    responseCode = "404",
-                    description = "Рецепт не было добавлен.",
+                    responseCode = "400",
+                    description = "Рецепт не был добавлен, проверьте ввод данных.",
                     content = {
                             @Content(
                                     mediaType = "application/json"
@@ -52,7 +49,7 @@ public class ReceiptController {
             )
     }
     )
-    @PostMapping("/add")
+    @PostMapping("/")
     public ResponseEntity<Recipe> addReceipe(@RequestBody Recipe recipe) {
         int id = receiptService.addRecipe(recipe);
         return ResponseEntity.ok().body(receiptService.getRecipe(id));
@@ -67,7 +64,7 @@ public class ReceiptController {
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
-                    description = "Рнецепт успешно получен!",
+                    description = "Рецепт успешно получен!",
                     content = {
                             @Content(
                                     mediaType = "application/json"
@@ -76,27 +73,18 @@ public class ReceiptController {
             ),
             @ApiResponse(
                     responseCode = "500",
-                    description = "Рецепт не был получен.",
-                    content = {
-                            @Content(
-                                    mediaType = "application/json"
-                            )
-                    }
-            ),
-            @ApiResponse(
-                    responseCode = "404",
                     description = "Такого рецепта не существует.",
                     content = {
                             @Content(
                                     mediaType = "application/json"
                             )
                     }
-            )
+            ),
     }
     )
-    @GetMapping("/get")
-    public String getReceipe(@RequestParam Integer id) {
-        return receiptService.getRecipe(id).toString();
+    @GetMapping("/")
+    public Recipe getReceipe(@RequestParam Integer id) {
+        return receiptService.getRecipe(id);
     }
 
     @Operation(
@@ -120,17 +108,8 @@ public class ReceiptController {
                     }
             ),
             @ApiResponse(
-                    responseCode = "500",
+                    responseCode = "204",
                     description = "Рецепт не был отредактирован, проверьте ввод данных.",
-                    content = {
-                            @Content(
-                                    mediaType = "application/json"
-                            )
-                    }
-            ),
-            @ApiResponse(
-                    responseCode = "404",
-                    description = "Такого рецепта не существует.",
                     content = {
                             @Content(
                                     mediaType = "application/json"
@@ -139,15 +118,13 @@ public class ReceiptController {
             )
     }
     )
-    @PutMapping("/edit/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<Recipe> editRecipe(@PathVariable int id,@RequestBody Recipe recipe) {
-        if (receiptService.editRecipe(id, recipe)) {
+        boolean recipe1 = receiptService.editRecipe(id, recipe);
+        if (recipe1) {
             return ResponseEntity.ok().body(receiptService.getRecipe(id));
-        } else if (!receiptService.editRecipe(id, recipe)) {
-            return ResponseEntity.noContent().build();
-        } else {
-            return ResponseEntity.noContent().build();
         }
+            return ResponseEntity.noContent().build();
     }
     @Operation(
             summary = "Удаление рецепта",
@@ -167,15 +144,6 @@ public class ReceiptController {
                     }
             ),
             @ApiResponse(
-                    responseCode = "500",
-                    description = "Рецепт не был удален, проверьте ввод данных.",
-                    content = {
-                            @Content(
-                                    mediaType = "application/json"
-                            )
-                    }
-            ),
-            @ApiResponse(
                     responseCode = "404",
                     description = "Такого рецепта не существует.",
                     content = {
@@ -186,7 +154,7 @@ public class ReceiptController {
             )
     }
     )
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Recipe> deleteRecipe(@PathVariable int id){
         if (receiptService.deleteRecipe(id)) {
             return ResponseEntity.ok().body(receiptService.getRecipe(id));
@@ -206,23 +174,11 @@ public class ReceiptController {
                                     mediaType = "application/json"
                             )
                     }
-            ),
-            @ApiResponse(
-                    responseCode = "500",
-                    description = "Рецепты не были получены, добавьте рецепты.",
-                    content = {
-                            @Content(
-                                    mediaType = "application/json"
-                            )
-                    }
             )
     }
     )
-    @GetMapping("/get/all")
+    @GetMapping("/get")
     public ResponseEntity<Map<Integer, Recipe>> getAllRecipes() {
-        if (receiptService.getAllRecipes() == null) {
-            return ResponseEntity.badRequest().build();
-        }
         return ResponseEntity.ok(receiptService.getAllRecipes());
     }
 }
