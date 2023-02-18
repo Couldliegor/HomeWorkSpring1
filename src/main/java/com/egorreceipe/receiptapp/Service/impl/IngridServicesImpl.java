@@ -1,12 +1,14 @@
 package com.egorreceipe.receiptapp.Service.impl;
 
 import com.egorreceipe.receiptapp.Model.Ingridient;
+import com.egorreceipe.receiptapp.Service.FilesRecipeService;
 import com.egorreceipe.receiptapp.Service.IngridServices;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -16,16 +18,18 @@ import java.util.Map;
 
 @Service
 public class IngridServicesImpl implements IngridServices {
-    public LinkedHashMap<Integer, Ingridient> ingridInMap = new LinkedHashMap<>();
-    public static int id = 0;
-    public IngridServicesImpl(FilesIngridServiceImpl filesServices) {
+    private LinkedHashMap<Integer, Ingridient> ingridInMap = new LinkedHashMap<>();
+    private static int id = 0;
+    private final FilesRecipeService filesServices;
+
+    public IngridServicesImpl(@Qualifier("filesIngridServiceImpl") FilesRecipeService filesServices) {
         this.filesServices = filesServices;
     }
-
-    private final FilesIngridServiceImpl filesServices;
     @PostConstruct
     private void init() {
-        readFromFile();
+        if (!filesServices.readFromFile().isEmpty()) {
+            readFromFile();
+        }
     }
     @Override
     public Integer addIngridient(Ingridient ingridient) {
@@ -64,6 +68,7 @@ public class IngridServicesImpl implements IngridServices {
     @Override
     public void deleteIngridient(int id) {
             ingridInMap.remove(id);
+            saveToFile();
     }
 
     @Override
@@ -75,7 +80,7 @@ public class IngridServicesImpl implements IngridServices {
             String json = new ObjectMapper().writeValueAsString(ingridInMap);
             filesServices.saveToFile(json);
         } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
     }
 
@@ -85,7 +90,7 @@ public class IngridServicesImpl implements IngridServices {
             ingridInMap =  new ObjectMapper().disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES).readValue(json, new TypeReference<LinkedHashMap<Integer, Ingridient>>() {
             });
         } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
     }
 }

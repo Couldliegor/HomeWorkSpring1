@@ -1,30 +1,33 @@
 package com.egorreceipe.receiptapp.Service.impl;
 
 import com.egorreceipe.receiptapp.Model.Recipe;
+import com.egorreceipe.receiptapp.Service.FilesRecipeService;
 import com.egorreceipe.receiptapp.Service.ReceiptService;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import java.util.*;
 @Service
 public class ReceiptServicessimpl implements ReceiptService {
-    private final FilesRecipeServiceImpl filesServices;
-    public LinkedHashMap<Integer, Recipe> receiptsInMap = new LinkedHashMap<>();
-    public static Integer id = 0;
+    private final FilesRecipeService filesServices;
+    private LinkedHashMap<Integer, Recipe> receiptsInMap = new LinkedHashMap<>();
+    private static Integer id = 0;
 
-    public ReceiptServicessimpl(FilesRecipeServiceImpl filesServices) {
+    public ReceiptServicessimpl(@Qualifier("filesRecipeServiceImpl") FilesRecipeService filesServices) {
         this.filesServices = filesServices;
     }
 
     @PostConstruct // проблема тут
     private void init() {
-        readFromFile();
+        if (!filesServices.readFromFile().isEmpty()) {
+            readFromFile();
+        }
     }
     @Override
     public Integer addRecipe(Recipe recipe) {
@@ -62,6 +65,7 @@ public class ReceiptServicessimpl implements ReceiptService {
     public boolean deleteRecipe(int id) {
         if (receiptsInMap.get(id) == null) {
             receiptsInMap.remove(id);
+            saveToFile();
             return true;
         }
         return false;
@@ -75,7 +79,7 @@ public class ReceiptServicessimpl implements ReceiptService {
             String json = new ObjectMapper().writeValueAsString(receiptsInMap);
             filesServices.saveToFile(json);
         } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
     }
 
@@ -85,7 +89,7 @@ public class ReceiptServicessimpl implements ReceiptService {
             receiptsInMap =  new ObjectMapper().disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES).readValue(json, new TypeReference<LinkedHashMap<Integer, Recipe>>() {
             });
         } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
     }
 

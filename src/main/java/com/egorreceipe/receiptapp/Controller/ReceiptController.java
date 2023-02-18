@@ -82,9 +82,13 @@ public class ReceiptController {
             ),
     }
     )
-    @GetMapping("/")
-    public Recipe getReceipe(@RequestParam Integer id) {
-        return receiptService.getRecipe(id);
+    @GetMapping("/{id}")
+    public ResponseEntity<Recipe> getReceipe(@PathVariable Integer id) {
+        Recipe recipe = receiptService.getRecipe(id);
+        if (!recipe.toString().equals("")) {
+            return ResponseEntity.ok().body(recipe);
+        }
+        return ResponseEntity.noContent().build();
     }
 
     @Operation(
@@ -177,7 +181,7 @@ public class ReceiptController {
             )
     }
     )
-    @GetMapping("/get")
+    @GetMapping("/")
     public ResponseEntity<Map<Integer, Recipe>> getAllRecipes() {
         return ResponseEntity.ok(receiptService.getAllRecipes());
     }

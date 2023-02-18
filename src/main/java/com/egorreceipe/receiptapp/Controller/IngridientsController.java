@@ -65,7 +65,7 @@ public class IngridientsController {
             description = "Параметры: id"
     )
     @Parameter(
-            name = "id", example  = "0"
+            name = "id", example = "0"
     )
     @ApiResponses(value = {
             @ApiResponse(
@@ -88,8 +88,8 @@ public class IngridientsController {
             )
     }
     )
-    @GetMapping("/")
-    public ResponseEntity<Ingridient> getIngrid(@RequestParam int id) {
+    @GetMapping("/{id}")
+    public ResponseEntity<Ingridient> getIngrid(@PathVariable int id) {
         if (ingridServices.getIngrid(id) == null) {
             return ResponseEntity.noContent().build();
         }
@@ -184,10 +184,19 @@ public class IngridientsController {
                                     mediaType = "application/json"
                             )
                     }
+            ),
+            @ApiResponse(
+                    responseCode = "204",
+                    description = "Ингридиентов не было добавлено!",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json"
+                            )
+                    }
             )
     }
     )
-    @GetMapping("/get")
+    @GetMapping("/")
     public ResponseEntity<Map<Integer, Ingridient>> getAllIngridients() {
         Map<Integer, Ingridient> map = ingridServices.getAllIngridients() ;
         if (map == null) {
