@@ -1,0 +1,78 @@
+{
+  "0": {
+    "name": "Фруктовый Авторский салат",
+    "posCountCookingInMin": 10,
+    "steps": {
+      "0": "Расставьте все ингредиенты, приготовьте тару, нож, доску и ложку",
+      "1": "Нарежьте фрукты и добавьте их в тару",
+      "2": "Добавьте в тару мед",
+      "3": "Хорошенько размешайте салат ложкой",
+      "4": "Bon appétit!"
+    },
+    "ingredients": [
+      {
+        "name": "Груша",
+        "countOfIngridients": 1,
+        "typeOfUnit": "штука"
+      },
+      {
+        "name": "Яблоки",
+        "countOfIngridients": 2,
+        "typeOfUnit": "штуки"
+      },
+      {
+        "name": "Бананы",
+        "countOfIngridients": 2,
+        "typeOfUnit": "штуки"
+      },
+      {
+        "name": "Киви",
+        "countOfIngridients": 2,
+        "typeOfUnit": "штуки"
+      },
+      {
+        "name": "Мед",
+        "countOfIngridients": 200,
+        "typeOfUnit": "грамм"
+      }
+    ]
+  },
+  "1": {
+    "name": "Фруктовый Авторский салат",
+    "posCountCookingInMin": 10,
+    "steps": {
+      "0": "Расставьте все ингредиенты, приготовьте тару, нож, доску и ложку",
+      "1": "Нарежьте фрукты и добавьте их в тару",
+      "2": "Добавьте в тару мед",
+      "3": "Хорошенько размешайте салат ложкой",
+      "4": "Bon appétit!"
+    },
+    "ingredients": [
+      {
+        "name": "Груша",
+        "countOfIngridients": 1,
+        "typeOfUnit": "штука"
+      },
+      {
+        "name": "Яблоки",
+        "countOfIngridients": 2,
+        "typeOfUnit": "штуки"
+      },
+      {
+        "name": "Бананы",
+        "countOfIngridients": 2,
+        "typeOfUnit": "штуки"
+      },
+      {
+        "name": "Киви",
+        "countOfIngridients": 2,
+        "typeOfUnit": "штуки"
+      },
+      {
+        "name": "Мед",
+        "countOfIngridients": 200,
+        "typeOfUnit": "грамм"
+      }
+    ]
+  }
+}
