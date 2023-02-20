@@ -1,16 +1,21 @@
 package com.egorreceipe.receiptapp.Service.impl;
 
 import com.egorreceipe.receiptapp.Service.FilesRecipeService;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
 @Service
-public class FilesIngridServiceImpl implements FilesRecipeService {
+public class
+FilesIngridServiceImpl implements FilesRecipeService {
     @Value("${path.to.data.file}")
     private String dataFilePath;
 
@@ -51,5 +56,20 @@ public class FilesIngridServiceImpl implements FilesRecipeService {
     @Override
     public File getDataFile() {
         return new File(dataFilePath + "/" + dataFileName);
+    }
+
+    public boolean tryCheckConstruction(MultipartFile file) {
+        if (!StringUtils.contains(file.getContentType(), "json")) {
+            return false;
+        }
+        cleanDataFile();
+        File dataFile = getDataFile();
+        try (FileOutputStream fos = new FileOutputStream(dataFile)) {
+            IOUtils.copy(file.getInputStream(), fos);
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 }

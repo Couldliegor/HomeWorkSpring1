@@ -1,7 +1,7 @@
 package com.egorreceipe.receiptapp.Controller;
 
 
-import com.egorreceipe.receiptapp.Model.Ingridient;
+import com.egorreceipe.receiptapp.Model.Ingredient;
 import com.egorreceipe.receiptapp.Service.IngridServices;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -55,8 +55,8 @@ public class IngridientsController {
     }
     )
     @PostMapping("/")
-    public ResponseEntity<Ingridient> addIngrid(@RequestBody Ingridient ingridient) {
-        Integer id = ingridServices.addIngridient(ingridient);
+    public ResponseEntity<Ingredient> addIngrid(@RequestBody Ingredient ingredient) {
+        Integer id = ingridServices.addIngridient(ingredient);
         return ResponseEntity.ok().body(ingridServices.getIngrid(id));
     }
 
@@ -89,7 +89,7 @@ public class IngridientsController {
     }
     )
     @GetMapping("/{id}")
-    public ResponseEntity<Ingridient> getIngrid(@PathVariable int id) {
+    public ResponseEntity<Ingredient> getIngrid(@PathVariable int id) {
         if (ingridServices.getIngrid(id) == null) {
             return ResponseEntity.noContent().build();
         }
@@ -126,8 +126,8 @@ public class IngridientsController {
     }
     )
     @PutMapping("/{id}")
-    public ResponseEntity<Ingridient> editIngridient(@PathVariable int id, @RequestBody Ingridient ingridient) {
-        if (ingridServices.editIngridient(id, ingridient)) {
+    public ResponseEntity<Ingredient> editIngridient(@PathVariable int id, @RequestBody Ingredient ingredient) {
+        if (ingridServices.editIngridient(id, ingredient)) {
             return ResponseEntity.ok().body(ingridServices.getIngrid(id));
         }
         return ResponseEntity.notFound().build();
@@ -164,7 +164,7 @@ public class IngridientsController {
     }
     )
     @DeleteMapping("/{id}")
-    public ResponseEntity<Ingridient> deleteIngridient(@PathVariable int id) {
+    public ResponseEntity<Ingredient> deleteIngridient(@PathVariable int id) {
         if (ingridServices.getIngrid(id) == null) {
             return ResponseEntity.notFound().build();
         }
@@ -197,8 +197,8 @@ public class IngridientsController {
     }
     )
     @GetMapping("/")
-    public ResponseEntity<Map<Integer, Ingridient>> getAllIngridients() {
-        Map<Integer, Ingridient> map = ingridServices.getAllIngridients() ;
+    public ResponseEntity<Map<Integer, Ingredient>> getAllIngridients() {
+        Map<Integer, Ingredient> map = ingridServices.getAllIngridients() ;
         if (map == null) {
             return ResponseEntity.noContent().build();
         }

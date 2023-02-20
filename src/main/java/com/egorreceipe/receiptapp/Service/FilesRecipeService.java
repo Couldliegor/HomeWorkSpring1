@@ -1,5 +1,7 @@
 package com.egorreceipe.receiptapp.Service;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import java.io.File;
 
 public interface FilesRecipeService {
@@ -9,4 +11,6 @@ public interface FilesRecipeService {
 
     boolean cleanDataFile();
     File getDataFile();
+
+    boolean tryCheckConstruction(MultipartFile file);
 }

@@ -1,16 +1,18 @@
 package com.egorreceipe.receiptapp.Model;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 
-@Data // иквалс хешкод гет сет
-@AllArgsConstructor
+@Data
 @NoArgsConstructor
-public class Recipe {
+@AllArgsConstructor
+public class ConnectedRecipe {
     private String name;
     private int posCountCookingInMin;
-    private Integer[] ingredients;
-    private List<String> steps;
+    private LinkedHashMap<Integer,String> steps;
+    private ArrayList<Ingredient> ingredients;
 }

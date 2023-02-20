@@ -1,19 +1,21 @@
 package com.egorreceipe.receiptapp.Service;
 
-import com.egorreceipe.receiptapp.Model.Ingridient;
+import com.egorreceipe.receiptapp.Model.Ingredient;
 
 import java.util.Map;
 
 public interface IngridServices {
-    Integer addIngridient(Ingridient ingridient);
+    Integer addIngridient(Ingredient ingredient);
 
-    Ingridient getIngrid(Integer id2);
+    Ingredient getIngrid(Integer id2);
 
-    void checkingForIlligalArduments(Ingridient ingridient);
+    void checkingForIlligalArduments(Ingredient ingredient);
 
-    boolean editIngridient(int id, Ingridient ingridient);
+    boolean editIngridient(int id, Ingredient ingredient);
 
     void deleteIngridient(int id);
 
-    Map<Integer, Ingridient> getAllIngridients();
+    Map<Integer, Ingredient> getAllIngridients();
+
+    void saveToFile();
 }

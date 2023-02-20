@@ -1,10 +1,14 @@
 package com.egorreceipe.receiptapp.Service.impl;
 
 import com.egorreceipe.receiptapp.Service.FilesRecipeService;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -16,11 +20,12 @@ public class FilesRecipeServiceImpl implements FilesRecipeService {
 
     @Value("${name.of.data1.file}")
     private String dataFileName;
+
     @Override
     public boolean saveToFile(String json) {
         try {
             cleanDataFile();
-            Files.writeString(Path.of(dataFilePath,dataFileName), json); // записываем строку в файл.
+            Files.writeString(Path.of(dataFilePath, dataFileName), json); // записываем строку в файл.
             return true;
         } catch (IOException e) {
             return false;
@@ -30,7 +35,7 @@ public class FilesRecipeServiceImpl implements FilesRecipeService {
     @Override
     public String readFromFile() {
         try {
-            return Files.readString(Path.of(dataFilePath,dataFileName));
+            return Files.readString(Path.of(dataFilePath, dataFileName));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -39,7 +44,7 @@ public class FilesRecipeServiceImpl implements FilesRecipeService {
     @Override
     public boolean cleanDataFile() {
         try {
-            Path path = Path.of(dataFilePath,dataFileName);
+            Path path = Path.of(dataFilePath, dataFileName);
             Files.deleteIfExists(path);
             Files.createFile(path);
             return true;
@@ -48,8 +53,25 @@ public class FilesRecipeServiceImpl implements FilesRecipeService {
             return false;
         }
     }
+
     @Override
     public File getDataFile() {
         return new File(dataFilePath + "/" + dataFileName);
+    }
+
+    @Override
+    public boolean tryCheckConstruction(MultipartFile file) {
+        if (!StringUtils.contains(file.getContentType(), "json")) {
+            return false;
+        }
+        cleanDataFile();
+        File dataFile = getDataFile();
+        try (FileOutputStream fos = new FileOutputStream(dataFile)) {
+            IOUtils.copy(file.getInputStream(), fos);
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 }

@@ -1,12 +1,13 @@
 package com.egorreceipe.receiptapp.Controller;
 
 import com.egorreceipe.receiptapp.Service.FilesRecipeService;
+import com.egorreceipe.receiptapp.Service.IngridServices;
+import com.egorreceipe.receiptapp.Service.ReceiptService;
 import com.egorreceipe.receiptapp.Service.impl.FilesIngridServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
@@ -24,6 +25,8 @@ public class FileController {
     private final FilesRecipeService filesRecipeService;
 
     private final FilesRecipeService filesIngridService;
+
+
 
     public FileController(@Qualifier("filesRecipeServiceImpl") FilesRecipeService filesRecipeService, @Qualifier("filesIngridServiceImpl") FilesIngridServiceImpl filesIngridService) {
         this.filesRecipeService = filesRecipeService;
@@ -96,13 +99,9 @@ public class FileController {
     @PostMapping(value = "/import/Recipe", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     //загрузка файла в систему // consumes = то, что мы принимаем
     public ResponseEntity<Void> uploadRecipeDataFile(@RequestParam MultipartFile file) { //класс MultiFile дает всю необходимую информацию о файле, что крайне удобно
-        filesRecipeService.cleanDataFile();
-        File dataFile = filesRecipeService.getDataFile();
-        try (FileOutputStream fos = new FileOutputStream(dataFile)) {
-            IOUtils.copy(file.getInputStream(), fos);
+        boolean b = filesRecipeService.tryCheckConstruction(file);
+        if (b) {
             return ResponseEntity.ok().build();
-        } catch (IOException e) {
-            e.printStackTrace();
         }
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
@@ -134,13 +133,9 @@ public class FileController {
     @PostMapping(value = "/import/Ingrid", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     //загрузка файла в систему // consumes = то, что мы принимаем
     public ResponseEntity<Void> uploadIngridDataFile(@RequestParam MultipartFile file) { //класс MultiFile дает всю необходимую информацию о файле, что крайне удобно
-        filesIngridService.cleanDataFile();
-        File dataFile = filesIngridService.getDataFile();
-        try (FileOutputStream fos = new FileOutputStream(dataFile)) {
-            IOUtils.copy(file.getInputStream(), fos);
+        boolean b = filesIngridService.tryCheckConstruction(file);
+        if (b) {
             return ResponseEntity.ok().build();
-        } catch (IOException e) {
-            e.printStackTrace();
         }
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }

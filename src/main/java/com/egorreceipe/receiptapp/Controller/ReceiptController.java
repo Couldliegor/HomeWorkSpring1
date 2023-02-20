@@ -1,4 +1,5 @@
 package com.egorreceipe.receiptapp.Controller;
+import com.egorreceipe.receiptapp.Model.ConnectedRecipe;
 import com.egorreceipe.receiptapp.Model.Recipe;
 import com.egorreceipe.receiptapp.Service.ReceiptService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -50,7 +51,7 @@ public class ReceiptController {
     }
     )
     @PostMapping("/")
-    public ResponseEntity<Recipe> addReceipe(@RequestBody Recipe recipe) {
+    public ResponseEntity<ConnectedRecipe> addReceipe(@RequestBody Recipe recipe) {
         int id = receiptService.addRecipe(recipe);
         return ResponseEntity.ok().body(receiptService.getRecipe(id));
     }
@@ -72,7 +73,7 @@ public class ReceiptController {
                     }
             ),
             @ApiResponse(
-                    responseCode = "500",
+                    responseCode = "204",
                     description = "Такого рецепта не существует.",
                     content = {
                             @Content(
@@ -83,9 +84,9 @@ public class ReceiptController {
     }
     )
     @GetMapping("/{id}")
-    public ResponseEntity<Recipe> getReceipe(@PathVariable Integer id) {
-        Recipe recipe = receiptService.getRecipe(id);
-        if (!recipe.toString().equals("")) {
+    public ResponseEntity<ConnectedRecipe> getReceipe(@PathVariable Integer id) {
+        ConnectedRecipe recipe = receiptService.getRecipe(id);
+        if (recipe != null) {
             return ResponseEntity.ok().body(recipe);
         }
         return ResponseEntity.noContent().build();
@@ -123,7 +124,7 @@ public class ReceiptController {
     }
     )
     @PutMapping("/{id}")
-    public ResponseEntity<Recipe> editRecipe(@PathVariable int id,@RequestBody Recipe recipe) {
+    public ResponseEntity<ConnectedRecipe> editRecipe(@PathVariable int id,@RequestBody ConnectedRecipe recipe) {
         boolean recipe1 = receiptService.editRecipe(id, recipe);
         if (recipe1) {
             return ResponseEntity.ok().body(receiptService.getRecipe(id));
@@ -159,7 +160,7 @@ public class ReceiptController {
     }
     )
     @DeleteMapping("/{id}")
-    public ResponseEntity<Recipe> deleteRecipe(@PathVariable int id){
+    public ResponseEntity<ConnectedRecipe> deleteRecipe(@PathVariable int id){
         if (receiptService.deleteRecipe(id)) {
             return ResponseEntity.ok().body(receiptService.getRecipe(id));
         }
@@ -182,7 +183,7 @@ public class ReceiptController {
     }
     )
     @GetMapping("/")
-    public ResponseEntity<Map<Integer, Recipe>> getAllRecipes() {
+    public ResponseEntity<Map<Integer, ConnectedRecipe>> getAllRecipes() {
         return ResponseEntity.ok(receiptService.getAllRecipes());
     }
 }

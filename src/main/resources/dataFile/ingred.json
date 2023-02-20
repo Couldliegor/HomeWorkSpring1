@@ -1,32 +1,1 @@
-{
-  "0": {
-    "name": "Ананас",
-    "countOfIngridients": 1,
-    "typeOfUnit": "штука"
-  },
-  "1": {
-    "name": "Груша",
-    "countOfIngridients": 1,
-    "typeOfUnit": "штука"
-  },
-  "2": {
-    "name": "Яблоки",
-    "countOfIngridients": 2,
-    "typeOfUnit": "штуки"
-  },
-  "3": {
-    "name": "Бананы",
-    "countOfIngridients": 2,
-    "typeOfUnit": "штуки"
-  },
-  "4": {
-    "name": "Киви",
-    "countOfIngridients": 2,
-    "typeOfUnit": "штуки"
-  },
-  "5": {
-    "name": "Мед",
-    "countOfIngridients": 200,
-    "typeOfUnit": "грамм"
-  }
-}
+{  "0": {    "name": "Ананас",    "countOfIngridients": 1,    "typeOfUnit": "штука"  },  "1": {    "name": "Груша",    "countOfIngridients": 1,    "typeOfUnit": "штука"  },  "2": {    "name": "Яблоки",    "countOfIngridients": 2,    "typeOfUnit": "штуки"  },  "3": {    "name": "Бананы",    "countOfIngridients": 2,    "typeOfUnit": "штуки"  },  "4": {    "name": "Киви",    "countOfIngridients": 2,    "typeOfUnit": "штуки"  },  "5": {    "name": "Мед",    "countOfIngridients": 200,    "typeOfUnit": "грамм"  }}

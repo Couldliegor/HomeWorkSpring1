@@ -1,6 +1,6 @@
 package com.egorreceipe.receiptapp.Service.impl;
 
-import com.egorreceipe.receiptapp.Model.Ingridient;
+import com.egorreceipe.receiptapp.Model.Ingredient;
 import com.egorreceipe.receiptapp.Service.FilesRecipeService;
 import com.egorreceipe.receiptapp.Service.IngridServices;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -17,48 +17,53 @@ import java.util.Map;
 
 
 @Service
-public class IngridServicesImpl implements IngridServices {
-    private LinkedHashMap<Integer, Ingridient> ingridInMap = new LinkedHashMap<>();
+public class IngredServicesImpl implements IngridServices {
+    public static Map<Integer, Ingredient> ingredInMap = new LinkedHashMap<>();
     private static int id = 0;
     private final FilesRecipeService filesServices;
 
-    public IngridServicesImpl(@Qualifier("filesIngridServiceImpl") FilesRecipeService filesServices) {
+    public IngredServicesImpl(@Qualifier("filesIngridServiceImpl") FilesRecipeService filesServices) {
         this.filesServices = filesServices;
     }
     @PostConstruct
     private void init() {
-        if (!filesServices.readFromFile().isEmpty()) {
-            readFromFile();
+        try {
+            if (!filesServices.readFromFile().isEmpty()) {
+                readFromFile();
+            }
+        } catch (Exception e) {
+            saveToFile();
+            e.printStackTrace();
         }
     }
     @Override
-    public Integer addIngridient(Ingridient ingridient) {
-        checkingForIlligalArduments(ingridient);
-        ingridInMap.put(id, ingridient);
+    public Integer addIngridient(Ingredient ingredient) {
+        checkingForIlligalArduments(ingredient);
+        ingredInMap.put(id, ingredient);
         saveToFile();
         return id++;
     }
     @Override
-    public Ingridient getIngrid(Integer id) {
-        return ingridInMap.get(id);
+    public Ingredient getIngrid(Integer id) {
+        return ingredInMap.get(id);
     }
     @Override //String utils
-    public void checkingForIlligalArduments(Ingridient ingridient) {
-        if (ingridient.getCountOfIngridients() < 0) {
+    public void checkingForIlligalArduments(Ingredient ingredient) {
+        if (ingredient.getCountOfIngridients() < 0) {
             throw new IllegalArgumentException("Неправильно введено количество ингридиентов");
         }
-        if (StringUtils.isBlank(ingridient.getName()) || StringUtils.isEmpty(ingridient.getName())) {
+        if (StringUtils.isBlank(ingredient.getName()) || StringUtils.isEmpty(ingredient.getName())) {
             throw new IllegalArgumentException("Имя ингридиента не может быть пустым");
         }
-        if (StringUtils.isBlank(ingridient.getTypeOfUnit()) || StringUtils.isEmpty(ingridient.getTypeOfUnit())) {
+        if (StringUtils.isBlank(ingredient.getTypeOfUnit()) || StringUtils.isEmpty(ingredient.getTypeOfUnit())) {
             throw new IllegalArgumentException("Единица измерения не может быть пустой");
         }
     }
 
     @Override
-    public boolean editIngridient(int id, Ingridient ingridient) {
-        if (ingridInMap.get(id) != null) {
-            ingridInMap.put(id, ingridient);
+    public boolean editIngridient(int id, Ingredient ingredient) {
+        if (ingredInMap.get(id) != null) {
+            ingredInMap.put(id, ingredient);
             saveToFile();
             return true;
         }
@@ -67,17 +72,18 @@ public class IngridServicesImpl implements IngridServices {
 
     @Override
     public void deleteIngridient(int id) {
-            ingridInMap.remove(id);
+            ingredInMap.remove(id);
             saveToFile();
     }
 
     @Override
-    public Map<Integer, Ingridient> getAllIngridients() {
-        return ingridInMap;
+    public Map<Integer, Ingredient> getAllIngridients() {
+        return ingredInMap;
     }
-    private void saveToFile() {
+    @Override
+    public void saveToFile() {
         try {
-            String json = new ObjectMapper().writeValueAsString(ingridInMap);
+            String json = new ObjectMapper().writeValueAsString(ingredInMap);
             filesServices.saveToFile(json);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
@@ -87,7 +93,7 @@ public class IngridServicesImpl implements IngridServices {
     private void readFromFile() {
         String json = filesServices.readFromFile();
         try {
-            ingridInMap =  new ObjectMapper().disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES).readValue(json, new TypeReference<LinkedHashMap<Integer, Ingridient>>() {
+            ingredInMap =  new ObjectMapper().disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES).readValue(json, new TypeReference<LinkedHashMap<Integer, Ingredient>>() {
             });
         } catch (JsonProcessingException e) {
             e.printStackTrace();
