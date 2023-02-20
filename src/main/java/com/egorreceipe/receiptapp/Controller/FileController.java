@@ -1,8 +1,6 @@
 package com.egorreceipe.receiptapp.Controller;
 
 import com.egorreceipe.receiptapp.Service.FilesRecipeService;
-import com.egorreceipe.receiptapp.Service.IngridServices;
-import com.egorreceipe.receiptapp.Service.ReceiptService;
 import com.egorreceipe.receiptapp.Service.impl.FilesIngridServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -25,8 +23,6 @@ public class FileController {
     private final FilesRecipeService filesRecipeService;
 
     private final FilesRecipeService filesIngridService;
-
-
 
     public FileController(@Qualifier("filesRecipeServiceImpl") FilesRecipeService filesRecipeService, @Qualifier("filesIngridServiceImpl") FilesIngridServiceImpl filesIngridService) {
         this.filesRecipeService = filesRecipeService;
