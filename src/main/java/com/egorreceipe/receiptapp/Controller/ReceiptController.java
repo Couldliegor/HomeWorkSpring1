@@ -8,9 +8,16 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Map;
 
 @RestController
@@ -185,6 +192,28 @@ public class ReceiptController {
     @GetMapping("/")
     public ResponseEntity<Map<Integer, ConnectedRecipe>> getAllRecipes() {
         return ResponseEntity.ok(receiptService.getAllRecipes());
+    }
+    @GetMapping("/downloadRecipes")
+    @Operation(
+            summary = "Скачать файл с рецептами"
+    )
+    public ResponseEntity<InputStreamResource> createRecipeFile() {
+        try {
+            Path path = receiptService.createRecipeFile();
+            if (Files.size(path) == 0) {
+                return ResponseEntity.noContent().build();
+            } else {
+                InputStreamResource resource = new InputStreamResource(new FileInputStream(path.toFile()));
+                return ResponseEntity.ok()
+                        .contentType(MediaType.TEXT_PLAIN)
+                        .contentLength(Files.size(path))
+                        .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"Recipes.txt\"")
+                        .body(resource);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().build();
+        }
     }
 }
 

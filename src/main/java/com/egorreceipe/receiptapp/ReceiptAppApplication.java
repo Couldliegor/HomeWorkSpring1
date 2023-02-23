@@ -8,5 +8,4 @@ public class ReceiptAppApplication {
     public static void main(String[] args) {
         SpringApplication.run(ReceiptAppApplication.class, args);
     }
-
 }

@@ -1,5 +1,6 @@
 package com.egorreceipe.receiptapp.Service.impl;
 
+import com.egorreceipe.receiptapp.Service.FilesIngridService;
 import com.egorreceipe.receiptapp.Service.FilesRecipeService;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
@@ -14,8 +15,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 @Service
-public class
-FilesIngridServiceImpl implements FilesRecipeService {
+public class FilesIngridServiceImpl implements FilesIngridService {
     @Value("${path.to.data.file}")
     private String dataFilePath;
 

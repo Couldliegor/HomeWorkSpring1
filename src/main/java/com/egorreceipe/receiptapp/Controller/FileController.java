@@ -1,12 +1,12 @@
 package com.egorreceipe.receiptapp.Controller;
 
+import com.egorreceipe.receiptapp.Service.FilesIngridService;
 import com.egorreceipe.receiptapp.Service.FilesRecipeService;
-import com.egorreceipe.receiptapp.Service.impl.FilesIngridServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import org.springframework.beans.factory.annotation.Qualifier;
+import lombok.AllArgsConstructor;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -17,17 +17,13 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
 
+@AllArgsConstructor
 @RestController
 @RequestMapping("/file")
 public class FileController {
     private final FilesRecipeService filesRecipeService;
 
-    private final FilesRecipeService filesIngridService;
-
-    public FileController(@Qualifier("filesRecipeServiceImpl") FilesRecipeService filesRecipeService, @Qualifier("filesIngridServiceImpl") FilesIngridServiceImpl filesIngridService) {
-        this.filesRecipeService = filesRecipeService;
-        this.filesIngridService = filesIngridService;
-    }
+    private final FilesIngridService filesIngridService;
 
     @Operation(
             summary = "Получение файла с сервера в формате .json"

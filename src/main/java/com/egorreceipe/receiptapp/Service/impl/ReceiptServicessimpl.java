@@ -14,6 +14,11 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
+import java.io.IOException;
+import java.io.Writer;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.util.*;
 @Service
 public class ReceiptServicessimpl implements ReceiptService {
@@ -35,6 +40,28 @@ public class ReceiptServicessimpl implements ReceiptService {
             saveToFile();
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public Path createRecipeFile() throws IOException {
+        Path path = filesServices.createTempRecipeFile("recipeFile");
+        try (Writer writer = Files.newBufferedWriter(path, StandardOpenOption.APPEND)) {
+            for (ConnectedRecipe recipe : receiptsInMap.values()) {
+                writer.append(recipe.getName()).append("\n")
+                        .append("Время приготовления: ").append(String.valueOf(recipe.getPosCountCookingInMin())).append("\n")
+                        .append("Ингредиенты: ").append("\n");
+
+                for (Ingredient ingredients : recipe.getIngredients()) {
+                    writer.append("•").append(ingredients.toString()).append("\n");
+                }
+                writer.append("Инструкция приготовления: ").append("\n");
+
+                for (String steps : recipe.getSteps().values()) {
+                    writer.append("➣").append(steps).append("\n");
+                }
+            }
+        }
+        return path;
     }
     @Override
     public Integer addRecipe(Recipe recipe) {

@@ -20,6 +20,15 @@ public class FilesRecipeServiceImpl implements FilesRecipeService {
 
     @Value("${name.of.data1.file}")
     private String dataFileName;
+    @Override
+    public Path createTempRecipeFile(String suffix) {
+        try {
+            return Files.createTempFile(Path.of(dataFilePath), "tempFile", suffix);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 
     @Override
     public boolean saveToFile(String json) {

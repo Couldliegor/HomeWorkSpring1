@@ -22,9 +22,10 @@ public class IngredServicesImpl implements IngridServices {
     private static int id = 0;
     private final FilesRecipeService filesServices;
 
-    public IngredServicesImpl(@Qualifier("filesIngridServiceImpl") FilesRecipeService filesServices) {
+    public IngredServicesImpl(FilesRecipeService filesServices) {
         this.filesServices = filesServices;
     }
+
     @PostConstruct
     private void init() {
         try {
