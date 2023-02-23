@@ -1,0 +1,4 @@
+"name": "ReceiptApp",
+"Functions": "A server with a beautiful receipts",
+"Technologies": "Java,Spring,Maven,json",
+"Programming Language": "Java"
